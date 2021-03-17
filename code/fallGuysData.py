@@ -193,7 +193,7 @@ if len(episodeMarkers) == 0:
 roundTimes, actualRoundTimes = getRoundTimes(startRoundLines, userEndRoundLines, actualEndRoundLines)
 
 # gets start times for each show
-startTimes = getStartTimes(reg, conne)
+startTimes = getStartTimes(reg, conne, HOURS_DIFFERENTIAL)
 
 
 # **********************************************************
@@ -220,8 +220,8 @@ for showIdx, (j, user) in enumerate(zip(episodeMarkers, usernames)):
     show_dict = {}
     show_dict['Show ID'] = this_show # id
     show_dict['Start Time'] = startTimes[showIdx]
-    show_dict['Season'] = getSeason(startTimes[showIdx]) 
-    show_dict['Time Taken'] = getTimeTaken(startTimes[showIdx], final_lines[0].split(': ==')[0]) # approximate time taken
+    show_dict['Season'] = getSeason(startTimes[showIdx], HOURS_DIFFERENTIAL) 
+    show_dict['Time Taken'] = getTimeTaken(startTimes[showIdx], final_lines[0].split(': ==')[0], HOURS_DIFFERENTIAL) # approximate time taken
     show_dict['Game Mode'] = gameModes[showIdx]
     show_dict['Final'] = False
     show_dict['Rounds'] = len(rounds) # num rounds

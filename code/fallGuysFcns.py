@@ -3,7 +3,6 @@ import os, datetime, time
 import pandas as pd
 import numpy as np
 
-HOURS_DIFFERENTIAL = 6
 
 def cleanLines(lines):
     return [line.replace('[', '').replace(']', '').replace('>', '').strip() for line in lines]
@@ -27,7 +26,7 @@ def roundSplit(lines):
 # takes registered and connected lines
 # returns start times for rounds
 # (time at which game is found)
-def getStartTimes(reg, conne):
+def getStartTimes(reg, conne, HOURS_DIFFERENTIAL):
     startTimes = []
     
     for i in range(len(conne)):
@@ -42,13 +41,13 @@ def getStartTimes(reg, conne):
     
     return startTimes
 
-def getTimeTaken(start, end):
+def getTimeTaken(start, end, HOURS_DIFFERENTIAL):
     d = datetime.datetime.strptime(end, '%H:%M:%S.%f') - start
     # start time was already adjusted for HOURS_DIFFERENTIAL, so need to again
     return str(d - datetime.timedelta(days=d.days, hours=HOURS_DIFFERENTIAL))[2:] # so hours isn't included
 
 # expand on this later
-def getSeason(start_time):
+def getSeason(start_time, HOURS_DIFFERENTIAL):
     season_starts = {1: datetime.datetime.strptime("08/04/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'), 
                     2: datetime.datetime.strptime("10/08/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'), 
                     3: datetime.datetime.strptime("12/15/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p') }
@@ -316,10 +315,13 @@ def getShowSeconds(x):
     w = datetime.datetime.strptime(x, '%M:%S.%f').time()
     return float(str(w.minute * 60 + w.second) + '.' + str(w.microsecond))
 
-def getDataFrames():
-    print('get rid of personal in path')
-    shows_df = pd.read_csv(os.path.join('personal', 'data', 'shows.csv'))
-    rounds_df = pd.read_csv(os.path.join('personal', 'data', 'rounds.csv'))
+def getDataFrames(testing=False):
+    if testing:
+        shows_df = pd.read_csv(os.path.join('personal', 'data', 'shows.csv'))
+        rounds_df = pd.read_csv(os.path.join('personal', 'data', 'rounds.csv'))
+    else:
+        shows_df = pd.read_csv(os.path.join('data', 'shows.csv'))
+        rounds_df = pd.read_csv(os.path.join('data', 'rounds.csv'))
     
     shows_df['Game Mode'] = shows_df['Game Mode'].apply(lambda x: x.strip())
     shows_df['Time Taken'] = shows_df['Time Taken'].apply(getShowSeconds)
