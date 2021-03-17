@@ -6,7 +6,9 @@ is mostly something I threw together so I could scrape as much data as possible
 from my logs. While it isn't hard to use, it does require a little bit of setup. 
 
 The aim is to allow the charts section to work with data from popular trackers, 
-so that you could simply upload your data to a webpage and view visualizations there. 
+so that you could simply upload your data to a webpage and view visualizations there.  
+
+Examples of what the charts look like now can be found in [Fall Guys Exploration.ipynb](https://github.com/jvmohr/FallGuysCharts/blob/main/Fall%20Guys%20Data%20Exploration.ipynb). 
 
 ## To Do
 - Make the tracker easier to setup/use
