@@ -3,7 +3,8 @@ Code to track data and create graphs based on said data for Fall Guys
 
 ## Requirements
 Python 3
-- Can be downloaded from python.org
+- Can be downloaded from python.org  
+
 Python libraries: pandas, numpy, matplotlib
 - They can be downloaded by running 'pip install pandas numpy matplotlib' from the terminal / command prompt (should be able to search on your computer to find it)
 -- May need to use pip3 instead of pip - if you do, use python3 instead of python for the following steps
@@ -18,7 +19,7 @@ Python libraries: pandas, numpy, matplotlib
 - Type `python fgstSetup.py` in the terminal and wait for it to complete.
 
 
-### To Collect Dats
+### To Collect Data
 Run the data collection script in PowerShell after each session by running `python fallGuysData.py` 
 - Can open PowerShell similarly to as you did in the last step
 
