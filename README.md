@@ -1,5 +1,18 @@
 # FallGuysCharts
-Code to track data and create graphs based on said data for Fall Guys
+Code to track data and create graphs based on said data for Fall Guys.  
+
+The main purpose of this project is the charts section. The tracker portion 
+is mostly something I threw together so I could scrape as much data as possible 
+from my logs. While it isn't hard to use, it does require a little bit of setup. 
+
+The aim is to allow the charts section to work with data from popular trackers, 
+so that you could simply upload your data to a webpage and view visualizations there. 
+
+## To Do
+- Make the tracker easier to setup/use
+- Make the charts section work with data from popular trackers
+- Launch a notebook as a webpage that allows users to upload data and pick graphs to be displayed
+
 
 ## Requirements
 Python 3
