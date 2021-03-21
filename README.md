@@ -46,8 +46,15 @@ This runs the script for the session before the most recent one.
 
 
 ## Version History
+
+### 1.0.3 (3/21/2021)
+- General: Removed 'Fall Guys Slim.ipynb', changed remaining variables that 
+used the camelCase naming convention to use underscores instead, and added 
+special shows to fallGuysStructures.py
+- Graphs: Added a percent and an explode parameter for specialShowsPie
+
 ### 1.0.2 (3/20/2021)
-- General: Added info for Thin Ice Trials rounds and removed 'Fall Guys Slim.ipynb'
+- General: Added info for Thin Ice Trials rounds
 - Graphs: Added minutesPerWinBar(), winsBySeasonBar(), and specialShowsPie()
 - Statistics: Added getStreaks()
 
