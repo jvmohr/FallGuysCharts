@@ -172,4 +172,6 @@ starting_races = ['round_biggestfan', 'round_gauntlet_02', 'round_door_dash',
                   'round_chompchomp', 'round_gauntlet_01', 'round_see_saw', 
                   'round_gauntlet_03', 'round_gauntlet_04', 'round_gauntlet_05']
 
+# special shows (aka shows that are all the "same"/a similar round, like all Thin Ice)
+special_shows = ['event_only_floor_fall', 'event_only_jump_club', 'event_only_thin_ice']
 

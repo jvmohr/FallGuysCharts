@@ -31,34 +31,34 @@ lines = preprocessGrade4(lines)
 lines = preprocessGrade5(lines)
 
 # get first line of each new show and usernames used for show
-prevUser = '!!!!!!!!!!!!!!!'
-lookUser = True
-inRound = False
-inARound = False
+prev_user = '!!!!!!!!!!!!!!!'
+look_user = True
+in_round = False
+in_a_round = False
 num_players_lock = False
 finished = False
 undo_time = False
 received = False
 to_skip = False
-gameMode = 'main_show'
-partySize = 'na'
+game_mode = 'main_show'
+party_size = 'na'
 
-episodeMarkers = []
+episode_markers = []
 usernames = []
-partySizes = []
+party_sizes = []
 
 # times
 reg = []
 conne = []
-startRoundLines = []
-userEndRoundLines = []
-actualEndRoundLines = []
+start_round_lines = []
+user_end_round_lines = []
+actual_end_round_lines = []
 
-possLines = []
-gameModes = []
+poss_lines = []
+game_modes = []
 # to find the actual number of players that qualified (for racing rounds)
-prevNumLine = "green"
-numLines = []
+prev_num_line = "green"
+num_lines = []
 
 # **********************************************************
 # go through lines, looking for certain things**************
@@ -70,21 +70,21 @@ for i, line in enumerate(lines):
         received = False
     if 'Received disconnect reason from Catapult:' in line:
         to_skip = True
-    if lookUser and 'Sending login request' in line:
+    if look_user and 'Sending login request' in line:
         usernames.append(line.split(' player ')[-1].split(' networkID')[0].replace(',', ''))
-        prevUser = usernames[-1]
-        lookUser = False   
+        prev_user = usernames[-1]
+        look_user = False   
     # for type of show (main or alternate) (also called playlist)
     elif 'Chosen Show:' in line: # appears before entering matchmaking solo/group (not as of start of s3)
-        gameMode = line.split(':')[-1]
+        game_mode = line.split(':')[-1]
         
     # signifies start of looking for new episode
     # get size of party
     elif 'Party Size' in line or 'Begin matchmaking solo' in line:
         if 'Begin matchmaking solo' in line:
-            partySize = 1
+            party_size = 1
         else:
-            partySize = int(line.split(' ')[-1].strip())
+            party_size = int(line.split(' ')[-1].strip())
     # for show start time
     elif '[QosManager] Registered' in line or 'QosManager: Registered' in line or '[QosManager] Updated next periodic check' in line: # for registered time (date)
         to_add_reg = line
@@ -92,43 +92,43 @@ for i, line in enumerate(lines):
         to_add_conne = line
     # for playlist
     elif 'Selected show is' in line: # appears before every round as of s3
-        gameMode = line.split('Selected show is')[-1]
+        game_mode = line.split('Selected show is')[-1]
     # for server ID and map lines
     elif 'Received NetworkGameOptions from ' in line: 
         tmp = line.split('roundID=')[-1]
         serverID = line.split(' ')[4]
         if 'Default' not in tmp:
-            possLines.append([serverID, tmp, i])
+            poss_lines.append([serverID, tmp, i])
             
         received = True
     # for start round times and players that qualified from previous round
     elif 'state from Countdown to Playing' in line:
-        startRoundLines.append(line.split(': [')[0])
-        inRound = True
-        inARound = True
+        start_round_lines.append(line.split(': [')[0])
+        in_round = True
+        in_a_round = True
         num_players_lock = False
         # append last # players achieving obj when hit new round
-        if prevNumLine != "green":
-            numLines.append(prevNumLine.split('=')[-1])
-            prevNumLine = ""
+        if prev_num_line != "green":
+            num_lines.append(prev_num_line.split('=')[-1])
+            prev_num_line = ""
     elif 'Changing state from GameOver to Results' in line: # occassionally a random NumPlayers... line right before new round
         num_players_lock = True
     elif '[ClientGameSession] NumPlayersAchievingObjective=' in line: # for total number of players that quality
         if not num_players_lock:
-            prevNumLine = line
+            prev_num_line = line
     # for end round / player active in round times
-    elif '[ClientGameManager] Handling unspawn for player FallGuy' in line and prevUser in line:
-        if inRound:
-            userEndRoundLines.append(line.split(': [')[0])
-            inRound = False
+    elif '[ClientGameManager] Handling unspawn for player FallGuy' in line and prev_user in line:
+        if in_round:
+            user_end_round_lines.append(line.split(': [')[0])
+            in_round = False
     elif 'Changing local player state to: SpectatingEliminated' in line: # no longer appears as of ` Nov 21, 2020
-        if inRound:
-            userEndRoundLines.append(line.split(': C')[0])
-            inRound = False
+        if in_round:
+            user_end_round_lines.append(line.split(': C')[0])
+            in_round = False
     elif 'Changing state from Playing to GameOver' in line: # 'Changing state from GameOver to Results'
-        if inARound:
-            inARound = False
-            actualEndRoundLines.append(line.split(': [')[0])
+        if in_a_round:
+            in_a_round = False
+            actual_end_round_lines.append(line.split(': [')[0])
     # overall show data
     elif '[CompletedEpisodeDto]' in line: # marker for a good show; only append show stats here
         if received == False: 
@@ -138,51 +138,51 @@ for i, line in enumerate(lines):
             continue
         if finished: # last one was for a disconnected show then
             # save disconnected game
-            final_lines = getShowLines(lines, episodeMarkers[-1])
-            showData, rounds = roundSplit(final_lines)
-            disc_json = {'session': session_num, 'show_data': showData, 'rounds': rounds}
+            final_lines = getShowLines(lines, episode_markers[-1])
+            show_data, rounds = roundSplit(final_lines)
+            disc_json = {'session': session_num, 'show_data': show_data, 'rounds': rounds}
             with open(os.path.join('data', 'disconnected.json')) as json_file: 
                 data = json.load(json_file)
             data.append(disc_json)
             with open(os.path.join('data', 'disconnected.json'), 'w') as f: 
                 json.dump(data, f) 
             
-            partySizes[-1] = partySize
-            gameModes[-1] = gameMode
-            episodeMarkers[-1] = i
+            party_sizes[-1] = party_size
+            game_modes[-1] = game_mode
+            episode_markers[-1] = i
             reg[-1] = to_add_reg
             conne[-1] = to_add_conne
             if undo_time:
-                actualEndRoundLines = actualEndRoundLines[::-1]
-                actualEndRoundLines.remove('left')
-                actualEndRoundLines = actualEndRoundLines[::-1]
+                actual_end_round_lines = actual_end_round_lines[::-1]
+                actual_end_round_lines.remove('left')
+                actual_end_round_lines = actual_end_round_lines[::-1]
                 undo_time = False
-            if inARound:
-                actualEndRoundLines.append('left')
-                inARound = False
+            if in_a_round:
+                actual_end_round_lines.append('left')
+                in_a_round = False
                 undo_time = True
-            lookUser = True
+            look_user = True
             finished = True
             continue
-            
-        partySizes.append(partySize)
-        gameModes.append(gameMode)
-        episodeMarkers.append(i)
+        
+        party_sizes.append(party_size)
+        game_modes.append(game_mode)
+        episode_markers.append(i)
         reg.append(to_add_reg)
         conne.append(to_add_conne)
-        lookUser = True
-        partySize = 'na'
+        look_user = True
+        party_size = 'na'
         finished = True
-        if inARound:
-            actualEndRoundLines.append('left')
-            inARound = False
+        if in_a_round:
+            actual_end_round_lines.append('left')
+            in_a_round = False
             undo_time = True
 
 # append last # achieving obj
-numLines.append(prevNumLine.split('=')[-1])
+num_lines.append(prev_num_line.split('=')[-1])
 
 # if no episodes found, end
-if len(episodeMarkers) == 0:
+if len(episode_markers) == 0:
     print('no episodes found') # change
         
 # **********************************************************        
@@ -190,23 +190,23 @@ if len(episodeMarkers) == 0:
 # (time round starts until they either finish or are eliminated) (just qualify I think)
 # **********************************************************
 # gets round times: user's time in round and total round time
-roundTimes, actualRoundTimes = getRoundTimes(startRoundLines, userEndRoundLines, actualEndRoundLines)
+round_times, actual_round_times = getRoundTimes(start_round_lines, user_end_round_lines, actual_end_round_lines)
 
 # gets start times for each show
-startTimes = getStartTimes(reg, conne, HOURS_DIFFERENTIAL)
+start_times = getStartTimes(reg, conne, HOURS_DIFFERENTIAL)
 
 
 # **********************************************************
 # for each show/episode ************************************
 # **********************************************************
-roundIdx = 0
-showsSaved = 0
-showsSkipped = 0
+round_idx = 0
+shows_saved = 0
+shows_skipped = 0
 saved_a_show = False
 
-rnds = getExtraRoundInfoLines(possLines)
+rnds = getExtraRoundInfoLines(poss_lines)
     
-for showIdx, (j, user) in enumerate(zip(episodeMarkers, usernames)):
+for show_idx, (j, user) in enumerate(zip(episode_markers, usernames)):
     this_show = total_shows
     total_shows += 1
     
@@ -214,23 +214,23 @@ for showIdx, (j, user) in enumerate(zip(episodeMarkers, usernames)):
     final_lines = getShowLines(lines, j)
     
     # split data
-    showData, rounds = roundSplit(final_lines)
+    show_data, rounds = roundSplit(final_lines)
     
     # set show data
     show_dict = {}
     show_dict['Show ID'] = this_show # id
-    show_dict['Start Time'] = startTimes[showIdx]
-    show_dict['Season'] = getSeason(startTimes[showIdx], HOURS_DIFFERENTIAL) 
-    show_dict['Time Taken'] = getTimeTaken(startTimes[showIdx], final_lines[0].split(': ==')[0], HOURS_DIFFERENTIAL) # approximate time taken
-    show_dict['Game Mode'] = gameModes[showIdx]
+    show_dict['Start Time'] = start_times[show_idx]
+    show_dict['Season'] = getSeason(start_times[show_idx], HOURS_DIFFERENTIAL) 
+    show_dict['Time Taken'] = getTimeTaken(start_times[show_idx], final_lines[0].split(': ==')[0], HOURS_DIFFERENTIAL) # approximate time taken
+    show_dict['Game Mode'] = game_modes[show_idx]
     show_dict['Final'] = False
     show_dict['Rounds'] = len(rounds) # num rounds
     show_dict['Username'] = user
-    show_dict['Party Size'] = partySizes[showIdx]
+    show_dict['Party Size'] = party_sizes[show_idx]
     show_dict['addID'] = final_lines[0].split(': ==')[0] # end time
     
     # add other show data
-    for line in showData:
+    for line in show_data:
         show_dict[line.split(':')[0]] = line.split(':')[1].strip()
     
     # ********************************************
@@ -242,15 +242,15 @@ for showIdx, (j, user) in enumerate(zip(episodeMarkers, usernames)):
         round_dict = {'Show ID': this_show, 
                       'Round Num': round_[0].split(' ')[1].strip(), 
                       'Map': round_[0].split('|')[1].strip()}
-        round_dict['Time Spent'] = roundTimes[roundIdx]
-        round_dict['Round Length'] = actualRoundTimes[roundIdx]
+        round_dict['Time Spent'] = round_times[round_idx]
+        round_dict['Round Length'] = actual_round_times[round_idx]
         
         # add rest of data from list
         for line in round_[1:]:
             round_dict[line.split(':')[0]] = line.split(':')[1].strip()
         
         # add extra information
-        rnd = rnds[roundIdx]
+        rnd = rnds[round_idx]
         splts = rnd.split()
         # round_dict['Participants'] = splts[5].split('=')[-1] # num people
         # round_dict['Qualification Percent'] = splts[8].split('=')[-1].replace(',', '') # qual %
@@ -262,25 +262,26 @@ for showIdx, (j, user) in enumerate(zip(episodeMarkers, usernames)):
             if 'isFinalRound' in x:
                 if x.split('=')[-1].replace(',', '') == 'True':
                     show_dict['Final'] = True
-        round_dict['Actual Num Qual'] = numLines[roundIdx]
+        round_dict['Actual Num Qual'] = num_lines[round_idx]
         
-        roundIdx += 1
+        round_idx += 1
         rounds_list.append(round_dict)
     
     # ********************************************
     # save ***************************************
     # ******************************************** 
-    # save show_dict to one table
-    # save each dict in rounds_list to another table
+    # save show_dict to one csv
+    # save each dict in rounds_list to another csv
     if not saveData(show_dict, rounds_list):
-        showsSkipped += 1
+        shows_skipped += 1
         total_shows -= 1
     else:
-        showsSaved += 1
+        shows_saved += 1
         saved_a_show = True
 
 
-print('csvs saved successfully with {} new shows while skipping {} shows that were already saved'.format(showsSaved, showsSkipped))
+print('csvs saved successfully with {} new shows while skipping {} shows that were already saved'.format(
+    shows_saved, shows_skipped))
 
 with open('totalshows.txt', 'w') as f:
     f.write(str(total_shows))

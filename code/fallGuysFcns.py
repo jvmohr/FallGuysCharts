@@ -27,19 +27,19 @@ def roundSplit(lines):
 # returns start times for rounds
 # (time at which game is found)
 def getStartTimes(reg, conne, HOURS_DIFFERENTIAL):
-    startTimes = []
+    start_times = []
     
     for i in range(len(conne)):
         try:
-            registeredTime = datetime.datetime.strptime(reg[i].split('at: ')[-1], '%m/%d/%Y %I:%M:%S %p')
+            registered_time = datetime.datetime.strptime(reg[i].split('at: ')[-1], '%m/%d/%Y %I:%M:%S %p')
         except:
-            registeredTime = datetime.datetime.strptime(reg[i].split('check - ')[-1], '%m/%d/%Y %I:%M:%S %p')
-        connectedTime = datetime.datetime.strptime(conne[i].split(': [')[0], '%H:%M:%S.%f')
+            registered_time = datetime.datetime.strptime(reg[i].split('check - ')[-1], '%m/%d/%Y %I:%M:%S %p')
+        connected_time = datetime.datetime.strptime(conne[i].split(': [')[0], '%H:%M:%S.%f')
         
-        d = (connectedTime - registeredTime)
-        startTimes.append(registeredTime + (d - datetime.timedelta(days=d.days+1, hours=HOURS_DIFFERENTIAL)))
+        d = (connected_time - registered_time)
+        start_times.append(registered_time + (d - datetime.timedelta(days=d.days+1, hours=HOURS_DIFFERENTIAL)))
     
-    return startTimes
+    return start_times
 
 def getTimeTaken(start, end, HOURS_DIFFERENTIAL):
     d = datetime.datetime.strptime(end, '%H:%M:%S.%f') - start
@@ -63,69 +63,70 @@ def getSeason(start_time, HOURS_DIFFERENTIAL):
 
 # gets lines for CompletedEpisode section of a show
 def getShowLines(lines, marker):
-    finalLines = []
-    tempLines = lines[marker:]
-    for line in tempLines:
+    final_lines = []
+    temp_lines = lines[marker:]
+    for line in temp_lines:
         if line == '': 
             continue
         if '>' == line[0] or '[Round' in line or '[Complet' in line:
-            finalLines.append(line)
+            final_lines.append(line)
             continue
         if ':' in line:
             break
             
-    return finalLines
+    return final_lines
 
 # get map info lines (qual percent and # participants)
-def getExtraRoundInfoLines(possLines): # rename?
+def getExtraRoundInfoLines(poss_lines): # rename?
     rnds = []
-    currRnd = possLines[0][1].split()[0]
-    currSID = possLines[0][0]
-    prevLine = possLines[0][2]
+    curr_rnd = poss_lines[0][1].split()[0]
+    curr_SID = poss_lines[0][0]
+    prev_line = poss_lines[0][2]
     
     # get last line before map switches (and server ID)
-    for i, (serverID, line, line_num) in enumerate(possLines):
+    for i, (server_ID, line, line_num) in enumerate(poss_lines):
         rnd = line.split()[0]
         
-        if rnd != currRnd: 
-            currRnd = rnd
-            currSID = serverID
-            rnds.append(possLines[i-1][1])
-            if (prevLine + 1) == line_num: # sometimes server changes map due to a dropout
+        if rnd != curr_rnd: 
+            curr_rnd = rnd
+            curr_SID = server_ID
+            rnds.append(poss_lines[i-1][1])
+            if (prev_line + 1) == line_num: # sometimes server changes map due to a dropout
                 rnds.pop()      
-        elif serverID != currSID:
-            currRnd = rnd
-            currSID = serverID
+        elif server_ID != curr_SID:
+            curr_rnd = rnd
+            curr_SID = server_ID
             rnds.append(possLines[i-1][1])
-            if (prevLine + 1) == line_num:
+            if (prev_line + 1) == line_num:
                 rnds.pop()
-        prevLine = line_num
+        prev_line = line_num
     
-    rnds.append(possLines[-1][1])      
+    rnds.append(poss_lines[-1][1])      
     return rnds
+
 
 # preprocessGrade1 has been retired
 # remove lines in-between completed games
 def preprocessGrade2(lines):
-    #print(len(lines))
+    print(len(lines))
     lines2 = []
-    allGood = False
-    badgeID = False
+    all_good = False
+    badge_ID = False
     for line in lines:
         if '[CATAPULT] Login Succeeded' in line:
-            allGood = True
+            all_good = True
         if 'BadgeId:' in line:
-            badgeID = True
-        if badgeID:
-            if '[ClientGlobalGameState] ShutdownNetworkManager' in line:
-                badgeID = False
-                allGood = False
+            badge_ID = True
+        if badge_ID:
+            if '[ClientGlobalGameState] ShutdownNetworkManager' in line or '[ClientGlobalGameState] sending graceful disconnect message' in line:
+                badge_ID = False
+                all_good = False
                 lines2.append(line)
 
-        if allGood:
+        if all_good:
             lines2.append(line)
     lines = lines2
-    #print(len(lines))
+    print(len(lines))
     return lines
 
 # changes to the data extraction removed the need for this
@@ -262,20 +263,20 @@ def getSessions():
     return paths
 
 # gets round times
-def getRoundTimes(startRoundLines, userEndRoundLines, actualEndRoundLines):
-    roundTimes = []
-    for a, b in zip(startRoundLines, userEndRoundLines):
-        roundTimes.append(subtractHours(a, b))
+def getRoundTimes(start_round_lines, user_end_round_lines, actual_end_round_lines):
+    round_times = []
+    for a, b in zip(start_round_lines, user_end_round_lines):
+        round_times.append(subtractHours(a, b))
 
     # get total round time
-    actualRoundTimes = []
-    for a, b in zip(startRoundLines, actualEndRoundLines):
+    actual_round_times = []
+    for a, b in zip(start_round_lines, actual_end_round_lines):
         try:
-            actualRoundTimes.append(subtractHours(a, b))
+            actual_round_times.append(subtractHours(a, b))
         except ValueError:
-            actualRoundTimes.append('uncertain')
+            actual_round_times.append('uncertain')
     
-    return roundTimes, actualRoundTimes
+    return round_times, actual_round_times
 
 def getTZ():
     # https://stackoverflow.com/a/10854983

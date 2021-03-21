@@ -233,28 +233,38 @@ def winsBySeasonBar(shows_info_df):
 
 
 # Get a pie chart for success in playlists that are of the 'same' final
-def specialShowsPie(special_show, shows_df):
+def specialShowsPie(special_show, shows_df, explode=False, percent=False):
     round_counts = shows_df[ shows_df['Game Mode'].str.contains(special_show) ]['Rounds'].value_counts()
     wins = shows_df[ shows_df['Game Mode'].str.contains(special_show) ]['Crowns'].astype(bool).sum()
     
     elim_dict = {'Wins': wins}
+    explode_list = [1, 0, 0, 0]
     if len(round_counts) == 4:
         elim_dict['Eliminated: Final'] = round_counts[4] - wins
         elim_dict['Eliminated: 3rd Round'] = round_counts[3]
+        explode_list.append(0)
     else:
         elim_dict['Eliminated: Final'] = round_counts[3] - wins
+        
     elim_dict['Eliminated: 2nd Round'] = round_counts[2]
     elim_dict['Eliminated: 1st Round'] = round_counts[1]
+    
+    # plot it
+    if percent:
+        lbl_fcn = lambda x: "{:.2f}%".format(x)
+    else:
+        lbl_fcn = lambda x: int(round(round_counts.sum() * x / 100))
     
     # pie chart
     plt.rcParams['font.size'] = 14
     fig, ax = plt.subplots(figsize=(7,7))
     plt.pie(elim_dict.values(), 
             labels=elim_dict.keys(), 
-            autopct=lambda x: int(round(round_counts.sum() * x / 100)),
+            autopct=lbl_fcn,
             colors=['#DFA517', '#1189BB', '#C00F27', '#2AB311', '#9E1EA8'], 
             startangle=15,
             wedgeprops={'edgecolor':'w'},
+            explode=explode_list if explode else None,
            )
     plt.title([show_type_dict[key] for key in list(show_type_dict.keys()) if special_show in key][0].title())
     return
