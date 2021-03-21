@@ -67,6 +67,8 @@ rounds_info_dict = {
     'round_jump_club_event_only_01': {'Name': 'Jump Club 1 (Jump Around)', 'Type': 'Survival', 'Introducted': 3},
     'round_jump_club_event_only_02': {'Name': 'Jump Club 2 (Jump Around)', 'Type': 'Survival', 'Introducted': 3},
     'round_jump_club_event_only_03': {'Name': 'Jump Club 3 (Jump Around)', 'Type': 'Survival', 'Introducted': 3},
+    'round_thin_ice_event_only_01': {'Name': 'Thin Ice (Thin Ice Trials)', 'Type': 'Survival', 'Introducted': 3},
+    'round_thin_ice_event_only_02': {'Name': 'Thin Ice (Thin Ice Trials)', 'Type': 'Survival', 'Introducted': 3},
     
     
     # Hunt
@@ -138,15 +140,22 @@ rounds_info_dict = {
     'round_jump_showdown_jump_club_event_only_final': {'Name': 'Jump Showdown (Jump Around)', 
                                                        'Type': 'Final', 
                                                        'Introducted': 3},
+    'round_thin_ice_event_only_final': {'Name': 'Thin Ice (Thin Ice Trials)', 
+                                        'Type': 'Final', 
+                                        'Introducted': 3},
 }
 
-# '': {'Name': '', 'Type': '', 'Introducted': 3},
+# '': {'Name': '', 'Type': '', 'Introducted': 4},
 
+# at some point figure out where/if this is used
 list_of_finals = ['round_fall_mountain', 'round_floor_fall', 'round_royal_rumble', 'round_jump_showdown', 
                   'round_fall_mountain_hub_complete', 'round_thin_ice', 'round_tunnel_final', 
-                  'round_floor_fall_event_only_final', 'round_jump_showdown_jump_club_event_only_final', ]
+                  'round_floor_fall_event_only_final', 'round_jump_showdown_jump_club_event_only_final', 
+                  'round_thin_ice_event_only_final']
 
 # not maintained
+# maybe redo this to get rid of the dates part
+# could test for inclusion elsewhere
 show_type_dict = {
     'main_show': 'Main Show',
     'event_only_survival_3010_to_0511': 'Slime Survivors',
@@ -154,7 +163,8 @@ show_type_dict = {
     'event_only_hard_mode_2111_to_2711': 'Hard Mode',
     'event_season_3_highlight_1512_to_1912': 'Season 3',
     'event_only_floor_fall_0501_to_0701': 'Hex-a-gone Trials',
-    'event_only_jump_club_1202_to_1402_2021': 'Jump Around'
+    'event_only_jump_club_1202_to_1402_2021': 'Jump Around',
+    'event_only_thin_ice_1903_to_2203_2021': 'Thin Ice Trials',
 }
 
 # all possible starting races in a normal round

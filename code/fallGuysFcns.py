@@ -398,7 +398,7 @@ def getRoundInfoDataFrame(rounds_df):
 def getShowStats(shows_df):
     shows_dict = {
         'Total Shows': len(shows_df),
-        'Total Wins': shows_df['Crowns'].sum(),
+        'Total Wins': shows_df['Crowns'].astype(bool).sum(),
         'Total Finals': shows_df['Final'].sum(),
         'Average Time (s)': shows_df['Time Taken'].mean(),
         'Average Rounds': shows_df['Rounds'].mean(),
@@ -428,4 +428,28 @@ def getPlaylistInfoDataFrame(shows_df):
 
     overall_shows_dict['total'] = getShowStats(shows_df)
     return pd.DataFrame.from_dict(overall_shows_dict, orient='index')
+
+# gets win streaks
+def getStreaks(shows_df):
+    streaks = []
+    curr_streak = []
+    prev_id = -1
+    for i, row in shows_df[shows_df['Crowns'] == 1].iterrows():
+        # if this show is the one directly after the last
+        if row['Show ID'] == prev_id + 1: 
+            # then add it to the current streak
+            curr_streak.append(i) 
+        else:
+            # else add the last streak to the list of streaks and..
+            streaks.append(curr_streak)
+            curr_streak = [i] # ..reset it and add the current row
+        prev_id = row['Show ID'] 
+    streaks.append(curr_streak)
+
+    # filter to get only actual streaks (2+ wins in a row)
+    actual_streaks = []
+    for streak in streaks:
+        if len(streak) > 1:
+            actual_streaks.append(streak)
+    return actual_streaks
 

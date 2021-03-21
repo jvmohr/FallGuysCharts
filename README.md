@@ -46,6 +46,11 @@ This runs the script for the session before the most recent one.
 
 
 ## Version History
+### 1.0.2 (3/20/2021)
+- General: Added info for Thin Ice Trials rounds and removed 'Fall Guys Slim.ipynb'
+- Graphs: Added minutesPerWinBar(), winsBySeasonBar(), and specialShowsPie()
+- Statistics: Added getStreaks()
+
 ### 1.0.1
 - Tracker: Changed some time zone code
 - Charts: Fixed a path inconsistency issue

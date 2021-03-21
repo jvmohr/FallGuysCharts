@@ -190,3 +190,72 @@ def startingRacesPie(rounds_df, inner='Qualified', title='Qualification by Start
     return s_df
 
 
+# Get a bar graph for average time per win by season and total
+def minutesPerWinBar(shows_info_df):
+    fig, ax = plt.subplots(figsize=(7,6))
+    plt.bar(shows_info_df.index.astype(str).tolist(), shows_info_df['Minutes Per Win'], color='#2FC1BE')
+    plt.suptitle('Minutes Per Win by Season')
+    plt.xlabel('Season')
+    plt.ylabel('Minutes')
+
+    def autolabel(rects):
+            for i, rect in enumerate(rects):
+                height = rect.get_height()
+                ax.annotate('{}'.format(str(shows_info_df['Total Wins'].iloc[i]))+' wins',
+                            xy=(rect.get_x() + rect.get_width() / 2, height-10),
+                            xytext=(0, 3),  # 3 points vertical offset
+                            textcoords="offset points",
+                            ha='center', va='bottom')
+
+    autolabel(ax.containers[0])
+    return
+
+
+# Get a bar chart for wins by season
+def winsBySeasonBar(shows_info_df):
+    fig, ax = plt.subplots(figsize=(7,6))
+    plt.bar(shows_info_df.index.astype(str).tolist(), shows_info_df['Total Wins'], color='#358EDC')
+    plt.suptitle('Wins by Season')
+    plt.xlabel('Season')
+    plt.ylabel('Wins')
+
+    def autolabel(rects):
+            for i, rect in enumerate(rects):
+                height = rect.get_height()
+                ax.annotate('{}'.format(shows_info_df['Total Wins'].iloc[i]),
+                            xy=(rect.get_x() + rect.get_width() / 2, height-2),
+                            xytext=(0, 3),  # 3 points vertical offset
+                            textcoords="offset points",
+                            ha='center', va='bottom')
+
+    autolabel(ax.containers[0])
+    return
+
+
+# Get a pie chart for success in playlists that are of the 'same' final
+def specialShowsPie(special_show, shows_df):
+    round_counts = shows_df[ shows_df['Game Mode'].str.contains(special_show) ]['Rounds'].value_counts()
+    wins = shows_df[ shows_df['Game Mode'].str.contains(special_show) ]['Crowns'].astype(bool).sum()
+    
+    elim_dict = {'Wins': wins}
+    if len(round_counts) == 4:
+        elim_dict['Eliminated: Final'] = round_counts[4] - wins
+        elim_dict['Eliminated: 3rd Round'] = round_counts[3]
+    else:
+        elim_dict['Eliminated: Final'] = round_counts[3] - wins
+    elim_dict['Eliminated: 2nd Round'] = round_counts[2]
+    elim_dict['Eliminated: 1st Round'] = round_counts[1]
+    
+    # pie chart
+    plt.rcParams['font.size'] = 14
+    fig, ax = plt.subplots(figsize=(7,7))
+    plt.pie(elim_dict.values(), 
+            labels=elim_dict.keys(), 
+            autopct=lambda x: int(round(round_counts.sum() * x / 100)),
+            colors=['#DFA517', '#1189BB', '#C00F27', '#2AB311', '#9E1EA8'], 
+            startangle=15,
+            wedgeprops={'edgecolor':'w'},
+           )
+    plt.title([show_type_dict[key] for key in list(show_type_dict.keys()) if special_show in key][0].title())
+    return
+
