@@ -47,6 +47,15 @@ rounds_info_dict = {
     'round_gauntlet_05': {'Name': 'Tundra Run', 
                           'Type': 'Race', 
                           'Introducted': 3},
+    'round_gauntlet_06': {'Name': 'Skyline Stumble', 
+                          'Type': 'Race', 
+                          'Introducted': 4},
+    'round_shortcircuit': {'Name': 'Short Circuit', 
+                           'Type': 'Race', 
+                           'Introducted': 4},
+    'round_tunnel_race': {'Name': 'Roll On', 
+                          'Type': 'Race', 
+                          'Introducted': 4},
     
     # Survival
     'round_block_party': {'Name': 'Block Party', 
@@ -61,6 +70,12 @@ rounds_info_dict = {
     'round_snowballsurvival': {'Name': 'Snowball Survival', 
                                'Type': 'Survival', 
                                'Introducted': 3},
+    'round_fruitpunch': {'Name': 'Big Shots', 
+                         'Type': 'Survival', 
+                         'Introducted': 4},
+    'round_hoverboardsurvival': {'Name': 'Hoverboard Heroes', 
+                                 'Type': 'Survival', 
+                                 'Introducted': 4},
     # Jump Around / Hex-a-gone Trials
     'round_floor_fall_event_only_01': {'Name': 'Hex-A-Gone 1 (Hex-a-gone Trials)', 'Type': 'Survival', 'Introducted': 3},
     'round_floor_fall_event_only_02': {'Name': 'Hex-A-Gone 2 (Hex-a-gone Trials)', 'Type': 'Survival', 'Introducted': 3},
@@ -115,6 +130,9 @@ rounds_info_dict = {
     'round_chicken_chase': {'Name': 'Pegwin Pursuit', 
                             'Type': 'Team', 
                             'Introducted': 3},
+    'round_basketfall': {'Name': 'Basketfall', 
+                         'Type': 'Team', 
+                         'Introducted': 4},
     
     # Finals
     'round_jump_showdown': {'Name': 'Jump Showdown', 
@@ -165,12 +183,30 @@ show_type_dict = {
     'event_only_floor_fall_0501_to_0701': 'Hex-a-gone Trials',
     'event_only_jump_club_1202_to_1402_2021': 'Jump Around',
     'event_only_thin_ice_1903_to_2203_2021': 'Thin Ice Trials',
+    'event_only_season_4_2203_to_2803_2021': 'FG 4041',
+    'event_twitch_rivals_2303_2021': 'Twitch Rivals',
+    
+}
+
+show_type_dict_v2 = {
+    'main_show': 'Main Show',
+    'event_only_survival': 'Slime Survivors',
+    'event_only_season_2': 'Medieval Mix Up',
+    'event_only_hard_mode': 'Hard Mode',
+    'event_season_3_highlight': 'Season 3',
+    'event_only_floor_fall': 'Hex-a-gone Trials',
+    'event_only_jump_club': 'Jump Around',
+    'event_only_thin_ice': 'Thin Ice Trials',
+    'event_only_season_4': 'FG 4041',
+    'event_twitch_rivals': 'Twitch Rivals',
 }
 
 # all possible starting races in a normal round
+# could grab all round 0 maps for the main_show mode
 starting_races = ['round_biggestfan', 'round_gauntlet_02', 'round_door_dash', 
                   'round_chompchomp', 'round_gauntlet_01', 'round_see_saw', 
-                  'round_gauntlet_03', 'round_gauntlet_04', 'round_gauntlet_05']
+                  'round_gauntlet_03', 'round_gauntlet_04', 'round_gauntlet_05', 
+                  'round_gauntlet_06', 'round_tunnel_race']
 
 # special shows (aka shows that are all the "same"/a similar round, like all Thin Ice)
 special_shows = ['event_only_floor_fall', 'event_only_jump_club', 'event_only_thin_ice']

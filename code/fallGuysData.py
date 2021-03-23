@@ -177,6 +177,7 @@ for i, line in enumerate(lines):
             actual_end_round_lines.append('left')
             in_a_round = False
             undo_time = True
+# end for
 
 # append last # achieving obj
 num_lines.append(prev_num_line.split('=')[-1])
@@ -278,10 +279,15 @@ for show_idx, (j, user) in enumerate(zip(episode_markers, usernames)):
     else:
         shows_saved += 1
         saved_a_show = True
+# end for
 
+if shows_skipped > 0:
+    print('{}: csvs saved successfully with {} new shows while skipping {} shows that were already saved'.format(
+        datetime.datetime.now().strftime('%m/%d/%Y %I:%M %p'), shows_saved, shows_skipped))
+else:
+    print('{}: csvs saved successfully with {} new shows'.format(
+        datetime.datetime.now().strftime('%m/%d/%Y %I:%M %p'), shows_saved))
 
-print('csvs saved successfully with {} new shows while skipping {} shows that were already saved'.format(
-    shows_saved, shows_skipped))
 
 with open('totalshows.txt', 'w') as f:
     f.write(str(total_shows))

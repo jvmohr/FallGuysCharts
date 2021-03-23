@@ -50,7 +50,9 @@ def getTimeTaken(start, end, HOURS_DIFFERENTIAL):
 def getSeason(start_time, HOURS_DIFFERENTIAL):
     season_starts = {1: datetime.datetime.strptime("08/04/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'), 
                     2: datetime.datetime.strptime("10/08/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'), 
-                    3: datetime.datetime.strptime("12/15/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p') }
+                    3: datetime.datetime.strptime("12/15/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'),
+                    4: datetime.datetime.strptime("03/21/2021 12:00:00 PM", '%m/%d/%Y %I:%M:%S %p'),
+                    }
     
     curr_day = start_time - datetime.timedelta(hours=HOURS_DIFFERENTIAL) # offset timezone
     
@@ -96,7 +98,7 @@ def getExtraRoundInfoLines(poss_lines): # rename?
         elif server_ID != curr_SID:
             curr_rnd = rnd
             curr_SID = server_ID
-            rnds.append(possLines[i-1][1])
+            rnds.append(poss_lines[i-1][1])
             if (prev_line + 1) == line_num:
                 rnds.pop()
         prev_line = line_num

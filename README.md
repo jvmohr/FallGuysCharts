@@ -47,6 +47,10 @@ This runs the script for the session before the most recent one.
 
 ## Version History
 
+### 1.0.4 (3/23/2021)
+- General: Added a new playlist dict, data for 6/7 new maps, and some other playlist info to fallGuysStructures.py
+- Tracker: Missed renaming one variable, updated getSeason() for season 4 start time, and updated message after running fallGuysData.py
+
 ### 1.0.3 (3/21/2021)
 - General: Removed 'Fall Guys Slim.ipynb', changed remaining variables that 
 used the camelCase naming convention to use underscores instead, and added 
