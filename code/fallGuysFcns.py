@@ -331,6 +331,7 @@ def getDataFrames(testing=False):
     rounds_df['Time Spent'] = rounds_df['Time Spent'].apply(getSeconds)
     rounds_df['Round Length'] = rounds_df['Round Length'].apply(getSeconds)
     rounds_df['Bonus Tier'] = rounds_df['Bonus Tier'].fillna(3) 
+    rounds_df['Normalized Position'] = rounds_df.apply(lambda x: round(100 * x['Position'] / x['Participants'], 2), axis=1)
 
     qual_df = rounds_df[rounds_df['Qualified']].copy()
     qual_df['Round Length'] = qual_df['Round Length'].astype(float);
@@ -350,6 +351,7 @@ def getMapInfoDataFrame(rounds_df, qual_df):
         'Percent Qualified': grouped_rounds_mean['Qualified']*100, # percent qualified
         'Average Position': grouped_rounds_mean['Position'], # avg position
         'Average Qual Position': qual_df.groupby('Map').mean()['Position'], # avg position when qualified
+        'Average Norm Qual Position': qual_df.groupby('Map').mean()['Normalized Position'], # average normalized position when qualified
         'Average Qual Time (s)': qual_df.groupby('Map').mean()['Time Spent'], # avg time when qualified
         'Fastest Qual Time (s)': qual_df.groupby('Map').min()['Time Spent'],
         'Average Qual Round Times (s)': qual_df.groupby('Map').mean()['Round Length'], # avg round time when qualified
@@ -414,6 +416,24 @@ def getShowStats(shows_df):
     }
     return shows_dict
 
+# difference is 'Wins' instead of 'Crowns'
+def getSquadShowStats(shows_df):
+    shows_dict = {
+        'Total Shows': len(shows_df),
+        'Total Wins': shows_df['Wins'].astype(bool).sum(),
+        'Total Finals': shows_df['Final'].sum(),
+        'Average Time (s)': shows_df['Time Taken'].mean(),
+        'Average Rounds': shows_df['Rounds'].mean(),
+        'Average Kudos': shows_df['Kudos'].mean(),
+        'Average Fame': shows_df['Fame'].mean(),
+        '% Made Finals': 100 * shows_df['Final'].sum() / len(shows_df),
+        '% Won': 100 * shows_df['Wins'].sum() / len(shows_df),
+        'Total Time (hours)': shows_df['Time Taken'].sum() / 60 / 60,
+        'Minutes Per Win': shows_df['Time Taken'].sum() / 60 / shows_df['Wins'].sum(),
+    }
+    return shows_dict
+
+
 def getShowsInfoDataFrame(shows_df):
     overall_shows_dict = {}
     for season in shows_df['Season'].unique():
@@ -423,11 +443,19 @@ def getShowsInfoDataFrame(shows_df):
     overall_shows_dict['total'] = getShowStats(shows_df)
     return pd.DataFrame.from_dict(overall_shows_dict, orient='index')
 
-def getPlaylistInfoDataFrame(shows_df):
+def getPlaylistInfoDataFrame(shows_df, rounds_df, season=None):
+    if season is not None:
+        shows_df = shows_df[ shows_df['Season'] == season ]
+    
     overall_shows_dict = {}
     for pl in shows_df['Game Mode'].unique():
         temp_df = shows_df[shows_df['Game Mode']==pl]
-        overall_shows_dict[pl] = getShowStats(temp_df)
+        
+        if 'squads' in pl:
+            sq_df, _ = getSquadDataFrames(temp_df, rounds_df[rounds_df['Show ID'].isin(temp_df['Show ID'].tolist())].copy())
+            overall_shows_dict[pl] = getSquadShowStats(sq_df)
+        else:
+            overall_shows_dict[pl] = getShowStats(temp_df)
 
     overall_shows_dict['total'] = getShowStats(shows_df)
     return pd.DataFrame.from_dict(overall_shows_dict, orient='index')
@@ -456,3 +484,66 @@ def getStreaks(shows_df):
             actual_streaks.append(streak)
     return actual_streaks
 
+# gets shows and rounds DataFrames for Squad Mode
+def getSquadDataFrames(shows_df, rounds_df):
+    squad_shows_df = shows_df[ shows_df['Game Mode'].str.contains('squads') ].copy()
+    squad_rounds_df = rounds_df[rounds_df['Show ID'].isin(squad_shows_df['Show ID'].tolist())].copy()
+    
+    # find which shows were Squad Mode wins
+    prev_id = -1
+    prev_qual = False
+    squad_wins = []
+    for i, row in squad_rounds_df.iterrows():
+        if row['Round Num'] == 0:
+            if prev_qual:
+                squad_wins.append(prev_id)
+        prev_id = row['Show ID']
+        prev_qual = row['Qualified']
+    
+    # if last one was a win
+    if prev_qual:
+        squad_wins.append(prev_id)
+
+    # add a new Wins column
+    squad_shows_df.loc[:, 'Wins'] = [1 if x in squad_wins else 0 for x in squad_shows_df['Show ID']]
+    
+    return squad_shows_df, squad_rounds_df
+
+# Gets a Series for total time in each playlist and one for wins in each playlist
+def getPlaylistTimeAndWins(shows_df, season=None):
+    if season is not None:
+        season_df = shows_df[shows_df['Season'] == season].copy()
+    else:
+        season_df = shows_df.copy()
+    
+    season_df['Game Mode'] = season_df['Game Mode'].apply(lambda x: x.split('_to_')[0][:-5] if '_to_' in x else x)
+    total_times = season_df.groupby('Game Mode')['Time Taken'].sum() / 60 # minutes
+    wins = season_df.groupby('Game Mode')['Crowns'].sum()
+    return total_times, wins
+
+# Gets a dataframe containing only final rounds in Squads Mode
+def getSquadsFinalsDataFrame(squad_shows_df, squad_rounds_df):
+    sf_df = squad_rounds_df[ squad_rounds_df['Show ID'].isin(squad_shows_df[ squad_shows_df['Final'] ]['Show ID']) ]
+
+    final_maps = []
+    prev_i = None
+    for i, row in sf_df.iterrows():
+        if row['Round Num'] == 0 and prev_i is not None:
+            final_maps.append(prev_i)
+        prev_i = i
+    
+    # get the last one
+    final_maps.append(prev_i)
+
+    return sf_df[ sf_df.index.isin(final_maps)]
+
+# Returns the name of one Squad Mode map
+def getSquadRoundName(squad_map):
+    squad_map = squad_map.replace('_squads', '')
+    if squad_map in rounds_info_dict.keys():
+        return rounds_info_dict[squad_map]['Name']
+    elif squad_map == 'round_fall_ball':
+        return 'Fall Ball'
+    else:
+        return squad_map
+    

@@ -47,6 +47,20 @@ This runs the script for the session before the most recent one.
 
 ## Version History
 
+### 1.1.0 (4/1/2021)
+- General: Added last new map, added Squads Mode and Slam Dunk playlist info, and fixed a mispelling in to fallGuysStructures.py; 
+added getSquadDataFrames() to get Squad Mode shows; 
+added a Normalized Position column to the rounds DataFrame returned by getDataFrames() and the one returned by getMapInfoDataFrame(); 
+added getPlaylistTimeAndWins(), getSquadsFinalsDataFrame(), and getSquadRoundName(); 
+added fallGuysStructures.py to the zip
+- Graphs: added 8 new graph functions: normalizedPositionRaceBar(), seasonMapsQualPercentBar(), 
+seasonPlaylistTimeBar(), seasonPlaylistWinsBar(), seasonPlaylistMinutesPerWinBar(), 
+playsPerWinPlaylistBar(), squadsFinalWinPercentBar(), and squadsFinalStackedBar()
+- Statistics: Added a season parameter to getPlaylistInfoDataFrame() and 
+flexibility to handle squads playlists; added getSquadShowStats() to accurately 
+get data for squads playlists
+
+
 ### 1.0.4 (3/23/2021)
 - General: Added a new playlist dict, data for 6/7 new maps, and some other playlist info to fallGuysStructures.py
 - Tracker: Missed renaming one variable, updated getSeason() for season 4 start time, and updated message after running fallGuysData.py

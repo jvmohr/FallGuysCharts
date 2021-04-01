@@ -1,4 +1,5 @@
 from fallGuysStructures import *
+from fallGuysFcns import *
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 import pandas as pd
@@ -267,5 +268,198 @@ def specialShowsPie(special_show, shows_df, explode=False, percent=False):
             explode=explode_list if explode else None,
            )
     plt.title([show_type_dict[key] for key in list(show_type_dict.keys()) if special_show in key][0].title())
+    return
+
+
+# Get a bar chart for average normalized position for race rounds when qualified
+def normalizedPositionRaceBar(maps_df):
+    race_rounds = []
+    for key in rounds_info_dict.keys():
+        if rounds_info_dict[key]['Type'] == 'Race':
+            race_rounds.append(key)
+
+    sm_df = maps_df[maps_df.index.isin(race_rounds)].copy()
+    sm_df = sm_df.sort_values(by='Average Norm Qual Position')
+
+    fig, ax = plt.subplots(figsize=(6,8))
+    plt.barh([rounds_info_dict[x]['Name'] for x in sm_df.index], sm_df['Average Norm Qual Position'], color='#2FC1BE')
+    plt.suptitle('Average Normalized Position When Qualified') 
+    #plt.title('(Normalized out of 100)')
+    plt.xlabel('Average Normalized Position (out of 100)')
+    
+    def autolabel(rects):
+        for i, rect in enumerate(rects):
+            height = rect.get_height()
+            ax.annotate('{:.1f}'.format(sm_df['Average Norm Qual Position'][i]),
+                        xy=(rect.get_width()-2, i-0.4),
+                        xytext=(0, 3),  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va='bottom')
+
+    autolabel(ax.containers[0])
+    return
+
+
+# Get a bar chart for percent qualified for maps introducted in a season
+"""
+-----Parameters-----
+maps_df: maps_df
+season: which season's new maps to use
+bar_labels: bool for numbers towards right of bar
+"""
+def seasonMapsQualPercentBar(maps_df, season=2, bar_labels=True):
+    season_rounds = []
+    for key in rounds_info_dict.keys():
+        if rounds_info_dict[key]['Introduced'] == season:
+            season_rounds.append(key)
+
+    sm_df = maps_df[maps_df.index.isin(season_rounds)]
+    sm_df = sm_df.sort_values('Percent Qualified', ascending=False)
+    
+    # bar chart with percent and attempts/times qualified
+    fig, ax = plt.subplots()
+    plt.barh([rounds_info_dict[x]['Name'] for x in sm_df.index], sm_df['Percent Qualified'], color='#2FC1BE')
+    plt.suptitle('Percent Qualified in Maps Introduced in Season {}'.format(season))
+    plt.xlabel('% Qualified')
+
+    def autolabel(rects):
+        for i, rect in enumerate(rects):
+            height = rect.get_height()
+            ax.annotate('{:.2f}%'.format(sm_df['Percent Qualified'][i]),
+                        xy=(rect.get_width()-10, i-0.2),
+                        xytext=(0, 3),  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va='bottom')
+
+    if bar_labels:
+        autolabel(ax.containers[0])
+    return
+
+
+# Get a bar chart for playlist playtime for a season
+"""
+-----Parameters-----
+shows_df: shows_df
+season: which season's new maps to use
+hours: bool for whether to use hoours or minutes on x-axis
+"""
+def seasonPlaylistTimeBar(shows_df, season, hours=True):
+    modes, _ = getPlaylistTimeAndWins(shows_df, season) # get two Series
+
+    if hours:
+        modes = modes / 60
+    modes = modes.sort_values()
+
+    # plot
+    fig, ax = plt.subplots(figsize=(10, 6))
+    plt.barh([show_type_dict_v2[x] if x in show_type_dict_v2.keys() else x for x in modes.index], 
+             modes, color='#2FC1BE')
+    plt.suptitle('Time in Each Playlist for Season {}'.format(season))
+    plt.xlabel('Hours' if hours else 'Minutes')
+    #plt.ylabel('Playlist')
+    return
+
+
+# Get a bar chart for wins per playlist from a season
+"""
+-----Parameters-----
+shows_df: shows_df
+season: which season's new maps to use
+"""
+def seasonPlaylistWinsBar(shows_df, season):
+    _, wins = getPlaylistTimeAndWins(shows_df, season) # get two Series
+
+    wins = wins[wins>0].sort_values()
+
+    # plot
+    fig, ax = plt.subplots(figsize=(7,6))
+    plt.barh([show_type_dict_v2[x] if x in show_type_dict_v2.keys() else x for x in wins.index], 
+             wins, color='#DFA517', height=0.6)
+    plt.suptitle('Wins per Playlist From Season {}'.format(season))
+    plt.xlabel('Wins')
+    #plt.ylabel('Playlist')
+    return 
+
+
+# Get a bar chart for minutes per win per playlist from a season
+"""
+-----Parameters-----
+shows_df: shows_df
+season: which season's new maps to use
+"""
+def seasonPlaylistMinutesPerWinBar(shows_df, season):
+    modes, wins = getPlaylistTimeAndWins(shows_df, season) # get two Series
+
+    modes = modes.sort_values()
+    wins = wins.reindex(modes.index) # https://stackoverflow.com/questions/31843911/
+
+    minutes_per_win = (modes.reindex(wins[wins > 0].index) / wins[wins>0])
+
+    # plot
+    fig, ax = plt.subplots(figsize=(7,6))
+    plt.barh([show_type_dict_v2[x] if x in show_type_dict_v2.keys() else x for x in minutes_per_win.index], 
+             minutes_per_win, color='#2FC1BE')
+    plt.suptitle('Minutes Per Win by Playlists From Season'.format(season))
+    plt.xlabel('Minutes per Win')
+    #plt.ylabel('Playlist')
+    return
+
+
+# Get a bar chart for plays per win for each playlist in a season (or overall)
+def playsPerWinPlaylistBar(shows_df, rounds_df, season=None, shorten=True):
+    if shorten:
+        shows_df['Game Mode'] = shows_df['Game Mode'].apply(lambda x: x.split('_to_')[0][:-5] if '_to_' in x else x)
+
+    playlists_df = getPlaylistInfoDataFrame(shows_df, rounds_df, season=season)
+    playlists_df = playlists_df[ playlists_df['Total Wins'] > 0 ]
+    games_per_win = playlists_df['Total Shows'] / playlists_df['Total Wins']
+
+    # plot
+    plt.barh([show_type_dict_v2[x] if x in show_type_dict_v2.keys() else x for x in games_per_win.index], 
+             games_per_win, color='#2AB311')
+    
+    if season is not None:
+        plt.suptitle('Show Plays Per Win In Season {}'.format(season))
+    else:
+        plt.suptitle('Show Plays Per Win')
+    plt.xlabel('Show Plays')
+    return
+
+# Get a bar chart for win percentage in each final in Squads Mode
+def squadsFinalWinPercentBar(squad_shows_df, squad_rounds_df):
+    finals_df = getSquadsFinalsDataFrame(squad_shows_df, squad_rounds_df)
+
+    finals_dict = {}
+    for final in finals_df['Map'].unique():
+        t_df = finals_df[ finals_df['Map'] == final ]
+        finals_dict[final] = 100 * t_df['Qualified'].sum() / len(t_df)
+
+    plt.barh([getSquadRoundName(x) for x in finals_dict.keys()], 
+             list(finals_dict.values()), color='#2FC1BE')
+    plt.suptitle('Win Percentage Per FInal in Squads Mode')
+    plt.xlabel('Percent')
+    return
+
+# Get a stacked bar plot for wins and fails per final in Squads Mode
+def squadsFinalStackedBar(squad_shows_df, squad_rounds_df):
+    # https://matplotlib.org/stable/gallery/lines_bars_and_markers/bar_stacked.html
+    # some help from ^
+    finals_df = getSquadsFinalsDataFrame(squad_shows_df, squad_rounds_df)
+
+    finals_dict = {}
+    for final in finals_df['Map'].unique():
+        t_df = finals_df[ finals_df['Map'] == final ]
+        finals_dict[final] = t_df['Qualified'].sum(), len(t_df)
+
+
+    plt.barh([getSquadRoundName(x) for x in finals_dict.keys()], 
+             [x[0] for x in finals_dict.values()], color='#DFA517', label='Wins')
+    plt.barh([getSquadRoundName(x) for x in finals_dict.keys()], 
+             [x[1] - x[0] for x in finals_dict.values()], 
+             left=[x[0] for x in finals_dict.values()], color='#9E1EA8', label='Losses')
+
+    plt.suptitle('Wins and Losses by Final in Squads Mode')
+    plt.xlabel('Wins/Losses')
+    plt.legend()
     return
 
