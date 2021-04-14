@@ -311,8 +311,12 @@ def undoSeconds(x):
 
 def getSeconds(x):
     if x == 'uncertain': return x
-    w = datetime.datetime.strptime(x, '%H:%M:%S.%f').time()
-    return float(str(w.hour + w.minute * 60 + w.second) + '.' + str(w.microsecond))
+    try:
+        w = datetime.datetime.strptime(x, '%H:%M:%S.%f').time()
+        return float(str(w.hour + w.minute * 60 + w.second) + '.' + str(w.microsecond))
+    except:
+        w = datetime.datetime.strptime(x, '%H:%M:%S').time()
+        return float(str(w.hour + w.minute * 60 + w.second))
 
 def getShowSeconds(x):
     w = datetime.datetime.strptime(x, '%M:%S.%f').time()
@@ -353,7 +357,7 @@ def getMapInfoDataFrame(rounds_df, qual_df):
         'Average Qual Position': qual_df.groupby('Map').mean()['Position'], # avg position when qualified
         'Average Norm Qual Position': qual_df.groupby('Map').mean()['Normalized Position'], # average normalized position when qualified
         'Average Qual Time (s)': qual_df.groupby('Map').mean()['Time Spent'], # avg time when qualified
-        'Fastest Qual Time (s)': qual_df.groupby('Map').min()['Time Spent'],
+        'Fastest Qual Time (s)': qual_df.groupby('Map').min(numeric_only=True)['Time Spent'], # new Timeout column gives it trouble
         'Average Qual Round Times (s)': qual_df.groupby('Map').mean()['Round Length'], # avg round time when qualified
         'Total Kudos': grouped_rounds_sum['Kudos'] + grouped_rounds_sum['Bonus Kudos'], # total kudos
         'Total Fame': grouped_rounds_sum['Fame'] + grouped_rounds_sum['Bonus Fame'], # total fame
@@ -544,6 +548,8 @@ def getSquadRoundName(squad_map):
         return rounds_info_dict[squad_map]['Name']
     elif squad_map == 'round_fall_ball':
         return 'Fall Ball'
+    elif squad_map == 'round_fall_mountain':
+        return 'Fall Mountain'
     else:
         return squad_map
     

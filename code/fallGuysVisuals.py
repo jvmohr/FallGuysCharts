@@ -438,7 +438,7 @@ def squadsFinalWinPercentBar(squad_shows_df, squad_rounds_df):
              list(finals_dict.values()), color='#2FC1BE')
     plt.suptitle('Win Percentage Per FInal in Squads Mode')
     plt.xlabel('Percent')
-    return
+    return finals_df['Qualified'].sum() / len(finals_df)
 
 # Get a stacked bar plot for wins and fails per final in Squads Mode
 def squadsFinalStackedBar(squad_shows_df, squad_rounds_df):
@@ -462,4 +462,17 @@ def squadsFinalStackedBar(squad_shows_df, squad_rounds_df):
     plt.xlabel('Wins/Losses')
     plt.legend()
     return
+
+# Get a pie chart for normal wins by season
+def winsBySeasonPie(shows_df):
+    temp_df = shows_df.copy()
+    temp_df['Won'] = temp_df['Crowns'].astype(bool)
+    wins = temp_df.groupby('Season')['Won'].sum()
+
+    plt.pie(wins, labels=['Season ' + str(x) for x in wins.index], 
+            autopct=lambda x: int(round(wins.sum() * x / 100)), 
+            #colors=[],
+            wedgeprops={'edgecolor':'w'})
+    plt.title('Wins By Season')
+    return wins
 

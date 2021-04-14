@@ -60,6 +60,9 @@ game_modes = []
 prev_num_line = "green"
 num_lines = []
 
+# checking for timeout (Jump Showdown)
+succeeded = []
+
 # **********************************************************
 # go through lines, looking for certain things**************
 # **********************************************************
@@ -107,6 +110,7 @@ for i, line in enumerate(lines):
         in_round = True
         in_a_round = True
         num_players_lock = False
+        users_succeeded = 0
         # append last # players achieving obj when hit new round
         if prev_num_line != "green":
             num_lines.append(prev_num_line.split('=')[-1])
@@ -125,10 +129,14 @@ for i, line in enumerate(lines):
         if in_round:
             user_end_round_lines.append(line.split(': C')[0])
             in_round = False
+    elif 'is succeeded=True' in line:
+        users_succeeded += 1
     elif 'Changing state from Playing to GameOver' in line: # 'Changing state from GameOver to Results'
         if in_a_round:
             in_a_round = False
             actual_end_round_lines.append(line.split(': [')[0])
+            succeeded.append(users_succeeded)
+            users_succeeded = 0
     # overall show data
     elif '[CompletedEpisodeDto]' in line: # marker for a good show; only append show stats here
         if received == False: 
@@ -161,6 +169,7 @@ for i, line in enumerate(lines):
                 actual_end_round_lines.append('left')
                 in_a_round = False
                 undo_time = True
+                succeeded.append(users_succeeded)
             look_user = True
             finished = True
             continue
@@ -177,6 +186,7 @@ for i, line in enumerate(lines):
             actual_end_round_lines.append('left')
             in_a_round = False
             undo_time = True
+            succeeded.append(users_succeeded)
 # end for
 
 # append last # achieving obj
@@ -264,6 +274,9 @@ for show_idx, (j, user) in enumerate(zip(episode_markers, usernames)):
                 if x.split('=')[-1].replace(',', '') == 'True':
                     show_dict['Final'] = True
         round_dict['Actual Num Qual'] = num_lines[round_idx]
+        round_dict['Actual Num Qual with Finals'] = succeeded[round_idx] # same as above but also keeps track of finals
+        round_dict['Timeout'] = True if succeeded[round_idx] > 1 and show_dict['Final'] else False
+        
         
         round_idx += 1
         rounds_list.append(round_dict)
@@ -287,7 +300,6 @@ if shows_skipped > 0:
 else:
     print('{}: csvs saved successfully with {} new shows'.format(
         datetime.datetime.now().strftime('%m/%d/%Y %I:%M %p'), shows_saved))
-
 
 with open('totalshows.txt', 'w') as f:
     f.write(str(total_shows))

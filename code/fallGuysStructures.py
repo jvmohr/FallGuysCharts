@@ -76,14 +76,23 @@ rounds_info_dict = {
     'round_hoverboardsurvival': {'Name': 'Hoverboard Heroes', 
                                  'Type': 'Survival', 
                                  'Introduced': 4},
-    # Jump Around / Hex-a-gone Trials
+    # "Special" Shows (all or mostly one map)
     'round_floor_fall_event_only_01': {'Name': 'Hex-A-Gone 1 (Hex-a-gone Trials)', 'Type': 'Survival', 'Introduced': 3},
     'round_floor_fall_event_only_02': {'Name': 'Hex-A-Gone 2 (Hex-a-gone Trials)', 'Type': 'Survival', 'Introduced': 3},
+    
     'round_jump_club_event_only_01': {'Name': 'Jump Club 1 (Jump Around)', 'Type': 'Survival', 'Introduced': 3},
     'round_jump_club_event_only_02': {'Name': 'Jump Club 2 (Jump Around)', 'Type': 'Survival', 'Introduced': 3},
     'round_jump_club_event_only_03': {'Name': 'Jump Club 3 (Jump Around)', 'Type': 'Survival', 'Introduced': 3},
+    
     'round_thin_ice_event_only_01': {'Name': 'Thin Ice (Thin Ice Trials)', 'Type': 'Survival', 'Introduced': 3},
     'round_thin_ice_event_only_02': {'Name': 'Thin Ice (Thin Ice Trials)', 'Type': 'Survival', 'Introduced': 3},
+    
+    'round_lava_event_only_slime_climb_01': {'Name': 'Slime Climb 1 (SCT)', 'Type': 'Race', 'Introduced': 4},
+    'round_lava_event_only_slime_climb_02': {'Name': 'Slime Climb 2 (SCT)', 'Type': 'Race', 'Introduced': 4},
+    'round_lava_event_only_slime_climb_03': {'Name': 'Slime Climb 3 (SCT)', 'Type': 'Race', 'Introduced': 4},
+    
+    'round_event_only_basketfall_01': {'Name': 'Basketfall (Slam Dunk)', 'Type': 'Team', 'Introduced': 4},
+    'round_event_only_basketfall_02': {'Name': 'Basketfall (Slam Dunk)', 'Type': 'Team', 'Introduced': 4},
     
     
     # Hunt
@@ -165,6 +174,9 @@ rounds_info_dict = {
     'round_thin_ice_event_only_final': {'Name': 'Thin Ice (Thin Ice Trials)', 
                                         'Type': 'Final', 
                                         'Introduced': 3},
+    'round_lava_event_only_slime_climb_final': {'Name': 'Slime Climb 1 (SCT)', 
+                                                'Type': 'Final', 
+                                                'Introduced': 4},
 }
 
 # '': {'Name': '', 'Type': '', 'Introduced': 4},
@@ -191,7 +203,7 @@ show_type_dict = {
     'event_twitch_rivals_2303_2021': 'Twitch Rivals',
     'squads_4player_2203_to_0404_2021': 'Squads Mode',
     'event_only_basketfall_2903_to_3103_2021': 'Slam Dunk',
-    
+    'event_only_slime_climb_0504_to_0804_2021': 'Slime Climb Time',
 }
 
 show_type_dict_v2 = {
@@ -207,6 +219,7 @@ show_type_dict_v2 = {
     'event_twitch_rivals': 'Twitch Rivals',
     'squads_4player': 'Squads Mode',
     'event_only_basketfall': 'Slam Dunk',
+    'event_only_slime_climb': 'Slime Climb Time',
 }
 
 # all possible starting races in a normal round
@@ -217,5 +230,6 @@ starting_races = ['round_biggestfan', 'round_gauntlet_02', 'round_door_dash',
                   'round_gauntlet_06', 'round_tunnel_race']
 
 # special shows (aka shows that are all the "same"/a similar round, like all Thin Ice)
-special_shows = ['event_only_floor_fall', 'event_only_jump_club', 'event_only_thin_ice']
+special_shows = ['event_only_floor_fall', 'event_only_jump_club', 'event_only_thin_ice', 
+                 'event_only_basketfall', 'event_only_slime_climb']
 
