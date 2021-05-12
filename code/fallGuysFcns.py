@@ -79,32 +79,40 @@ def getShowLines(lines, marker):
     return final_lines
 
 # get map info lines (qual percent and # participants)
-def getExtraRoundInfoLines(poss_lines): # rename?
+def getExtraRoundInfoLines(poss_lines): 
     rnds = []
     curr_rnd = poss_lines[0][1].split()[0]
     curr_SID = poss_lines[0][0]
     prev_line = poss_lines[0][2]
-    
+    prev_time = datetime.datetime.strptime(poss_lines[0][3], '%H:%M:%S.%f') # should be a fine default
+
     # get last line before map switches (and server ID)
-    for i, (server_ID, line, line_num) in enumerate(poss_lines):
+    for i, (server_ID, line, line_num, time) in enumerate(poss_lines):
         rnd = line.split()[0]
-        
+        time = datetime.datetime.strptime(time, '%H:%M:%S.%f')
+
         if rnd != curr_rnd: 
+            if (prev_line + 1) == line_num or (time - prev_time).seconds < 6: # sometimes server changes map due to a dropout\
+                rnds.pop()   
             curr_rnd = rnd
             curr_SID = server_ID
+            prev_time = time
             rnds.append(poss_lines[i-1][1])
-            if (prev_line + 1) == line_num: # sometimes server changes map due to a dropout
-                rnds.pop()      
         elif server_ID != curr_SID:
+            if (prev_line + 1) == line_num or (time - prev_time).seconds < 6:
+                rnds.pop()   
             curr_rnd = rnd
             curr_SID = server_ID
+            prev_time = time
             rnds.append(poss_lines[i-1][1])
-            if (prev_line + 1) == line_num:
-                rnds.pop()
+        elif rnd == curr_rnd: # update time
+            prev_time = time
+
         prev_line = line_num
     
     rnds.append(poss_lines[-1][1])      
     return rnds
+
 
 
 # preprocessGrade1 has been retired
@@ -553,3 +561,9 @@ def getSquadRoundName(squad_map):
     else:
         return squad_map
     
+# Gets the top n times for a map
+def getTopTimes(rounds_df, shows_df, map_, n=5):
+    temp_df = rounds_df[rounds_df['Map'] == map_]
+    temp_df = temp_df[temp_df['Qualified'] == True]
+    top_n_df = temp_df.sort_values('Time Spent')[['Show ID', 'Time Spent']][:n]
+    return pd.merge(top_n_df, shows_df, on='Show ID', how='left')

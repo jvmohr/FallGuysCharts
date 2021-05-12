@@ -1,5 +1,11 @@
 # FallGuysCharts Full Version History
 
+### 1.1.2 (5/11/2021)
+- General: Added info for Roll Call, Big Yeetus Tour, and Fall Ball Cup playlists 
+- Tracker: Fixed a problem where the game must switch maps in loading phase (had been partly fixed before)
+- Graphs: Added mapStatsOverTimeLine()
+- Statistics: Added getTopTimes() to get top n times user took on a specific map
+
 ### 1.1.1 (4/14/2021)
 - General: Added Fall Mountain to getSquadRoundName(), added info for Slime Climb Time and Slam Dunk, and gave getSeconds() the ability to handle if there was no microseconds
 - Tracker: Added two new columns, Actual Num Qual with Finals and Timeout, the first of which keeps track of the number of players that qualify for all rounds, including finals, and the latter of which is a boolean column for whether the final ended in a timeout or not

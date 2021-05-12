@@ -101,7 +101,7 @@ for i, line in enumerate(lines):
         tmp = line.split('roundID=')[-1]
         serverID = line.split(' ')[4]
         if 'Default' not in tmp:
-            poss_lines.append([serverID, tmp, i])
+            poss_lines.append([serverID, tmp, i, line.split(': ')[0]])
             
         received = True
     # for start round times and players that qualified from previous round

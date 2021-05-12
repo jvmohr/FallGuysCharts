@@ -476,3 +476,70 @@ def winsBySeasonPie(shows_df):
     plt.title('Wins By Season')
     return wins
 
+# Get a line plot for performance on a map or list of maps over time
+def mapStatsOverTimeLine(rounds_df, shows_df, rounds, metric='qual', time_period='season', rotate=False):
+    """
+    rounds: one round or list of rounds
+    metric: 'qual' or 'qual_percent'
+    time_period: 'season' or 'month'
+    rotate: bool
+    """
+    months = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
+          'July', 'August', 'September', 'October', 'November', 'December']
+    xtickpos = []
+
+    if type(rounds) == str:
+        rounds = [rounds]
+        title_fill = rounds_info_dict[rounds[0]]['Name'] if rounds[0] in rounds_info_dict.keys() else rounds[0]
+    else:
+        title_fill = '{} Maps'.format(len(rounds))
+        #title_fill = ", ".join([rounds_info_dict[r]['Name'] if r in rounds_info_dict.keys() else r for r in rounds])
+
+    # metric
+    if metric == 'qual':
+        ylabel = 'Number of Times Qualified'
+    elif metric == 'qual_percent':
+        ylabel = 'Percent Qualified'
+
+    fig, ax = plt.subplots(figsize=(10,4))
+    for round_ in rounds:
+
+        maps_df = rounds_df[ rounds_df['Map'] == round_ ]
+        maps_df = maps_df.merge(shows_df[['Show ID', 'Start Time', 'Season']], on='Show ID', how='left')
+
+        # time_period
+        if time_period == 'month':
+            maps_df['Month'] = maps_df['Start Time'].apply(lambda x: x.split('-')[1])
+            maps_df['Year'] = maps_df['Start Time'].apply(lambda x: x.split('-')[0])
+            mgb = maps_df.groupby(['Year', 'Month'])
+        elif time_period == 'season':
+            mgb = maps_df.groupby('Season')
+
+        # metric
+        if metric == 'qual':
+            qual_by_time = mgb['Qualified'].sum()
+        elif metric == 'qual_percent':
+            qual_by_time = 100 * mgb['Qualified'].sum() / mgb['Qualified'].count()
+
+        # time_period
+        if len(xtickpos) < len(qual_by_time.index.tolist()):
+            if time_period == 'month':
+                xlabel = 'Month-Year'
+                xticks = ["{}-{}".format(months[int(x[1])][:3], x[0]) for x in qual_by_time.index]
+                xtickpos = list(range(len(qual_by_time.index)))
+            elif time_period == 'season':
+                xlabel = 'Season'
+                xticks = [x for x in qual_by_time.index]
+                xtickpos = qual_by_time.index.tolist()
+
+        qual_by_time.plot(ax=ax, label=rounds_info_dict[round_]['Name'] 
+                                                        if round_ in rounds_info_dict.keys() 
+                                                        else round_)
+
+    plt.suptitle('Qualification On {} Over Time'.format(title_fill))
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.xticks(xtickpos, labels=xticks, rotation=90 if rotate else 0);
+    plt.legend()
+    return
+

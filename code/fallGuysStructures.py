@@ -94,6 +94,14 @@ rounds_info_dict = {
     'round_event_only_basketfall_01': {'Name': 'Basketfall (Slam Dunk)', 'Type': 'Team', 'Introduced': 4},
     'round_event_only_basketfall_02': {'Name': 'Basketfall (Slam Dunk)', 'Type': 'Team', 'Introduced': 4},
     
+    'round_tunnel_event_only_roll_out_01': {'Name': 'Roll Out 1 (Roll Call)', 'Type': 'Survival', 'Introduced': 4},
+    'round_tunnel_event_only_roll_out_02': {'Name': 'Roll Out 2 (Roll Call)', 'Type': 'Survival', 'Introduced': 4},
+    'round_tunnel_event_only_roll_out_03': {'Name': 'Roll Out 3 (Roll Call)', 'Type': 'Survival', 'Introduced': 4},
+    
+    'round_fall_ball_cup_only_01': {'Name': 'Fall Ball 1 (Fall Ball Cup)', 'Type': 'Team', 'Introduced': 3}, 
+    'round_fall_ball_cup_only_02': {'Name': 'Fall Ball 2 (Fall Ball Cup)', 'Type': 'Team', 'Introduced': 3},
+    'round_fall_ball_cup_only_03': {'Name': 'Fall Ball 3 (Fall Ball Cup)', 'Type': 'Team', 'Introduced': 3},
+    
     
     # Hunt
     'round_tail_tag': {'Name': 'Tail Tag', 
@@ -177,6 +185,9 @@ rounds_info_dict = {
     'round_lava_event_only_slime_climb_final': {'Name': 'Slime Climb 1 (SCT)', 
                                                 'Type': 'Final', 
                                                 'Introduced': 4},
+    'round_tunnel_event_only_roll_out_final': {'Name': 'Roll Off (Roll Call)', 
+                                               'Type': 'Final', 
+                                               'Introduced': 4},
 }
 
 # '': {'Name': '', 'Type': '', 'Introduced': 4},
@@ -204,6 +215,10 @@ show_type_dict = {
     'squads_4player_2203_to_0404_2021': 'Squads Mode',
     'event_only_basketfall_2903_to_3103_2021': 'Slam Dunk',
     'event_only_slime_climb_0504_to_0804_2021': 'Slime Climb Time',
+    'event_only_roll_out_1504_to_1704_2021': 'Roll Call',
+    'event_only_hard_mode_2104_to_2404_2021': 'Hard Mode',
+    'event_yeetus_0305_to_0605_2021': 'Big Yeetus Tour',
+    'event_only_fall_ball_1005_to_1205_2021': 'Fall Ball Cup',
 }
 
 show_type_dict_v2 = {
@@ -220,6 +235,9 @@ show_type_dict_v2 = {
     'squads_4player': 'Squads Mode',
     'event_only_basketfall': 'Slam Dunk',
     'event_only_slime_climb': 'Slime Climb Time',
+    'event_only_roll_out': 'Roll Call',
+    'event_yeetus': 'Big Yeetus Tour',
+    'event_only_fall_ball': 'Fall Ball Cup',
 }
 
 # all possible starting races in a normal round
@@ -231,5 +249,5 @@ starting_races = ['round_biggestfan', 'round_gauntlet_02', 'round_door_dash',
 
 # special shows (aka shows that are all the "same"/a similar round, like all Thin Ice)
 special_shows = ['event_only_floor_fall', 'event_only_jump_club', 'event_only_thin_ice', 
-                 'event_only_basketfall', 'event_only_slime_climb']
+                 'event_only_basketfall', 'event_only_slime_climb', 'event_only_roll_out']
 
