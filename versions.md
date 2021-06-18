@@ -1,5 +1,8 @@
 # FallGuysCharts Full Version History
 
+### 1.1.3
+- General: Added map info for The Slimescraper and Button Bashers; show info for X-treme Fall Guys, Blow Up, Hex-a-4041 Trials, No Teams, and Slimescraper Time; small formatting changes in fallGuysStructures.py
+
 ### 1.1.2 (5/11/2021)
 - General: Added info for Roll Call, Big Yeetus Tour, and Fall Ball Cup playlists 
 - Tracker: Fixed a problem where the game must switch maps in loading phase (had been partly fixed before)
