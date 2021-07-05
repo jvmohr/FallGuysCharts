@@ -1,6 +1,10 @@
 # FallGuysCharts Full Version History
 
-### 1.1.3
+### 1.1.4 (7/5/2021)
+- General: Added map info for Hex-A-Gone (Low Gravity) and show info for Fruit Basket, new Jump Around, new Blow Up, and Hoverboarding Time to fallGuysStructures.py
+- Tracker: Fixed a bug that popped up due to round naming in Hoverboarding Time playlist
+
+### 1.1.3 (6/18/2021)
 - General: Added map info for The Slimescraper and Button Bashers; show info for X-treme Fall Guys, Blow Up, Hex-a-4041 Trials, No Teams, and Slimescraper Time; small formatting changes in fallGuysStructures.py
 
 ### 1.1.2 (5/11/2021)
