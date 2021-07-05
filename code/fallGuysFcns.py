@@ -106,7 +106,11 @@ def getExtraRoundInfoLines(poss_lines):
             prev_time = time
             rnds.append(poss_lines[i-1][1])
         elif rnd == curr_rnd: # update time
-            prev_time = time
+            if (line_num - prev_line) > 500: # if rounds are far enough apart, they are separate
+                curr_rnd = rnd
+                curr_SID = server_ID
+                prev_time = time
+                rnds.append(poss_lines[i-1][1])
 
         prev_line = line_num
     

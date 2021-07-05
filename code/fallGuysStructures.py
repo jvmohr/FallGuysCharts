@@ -112,6 +112,7 @@ rounds_info_dict = {
     'round_slimeclimb_2_event_only_01': {'Name': 'The Slimescraper 1 (Slimescraper Time)', 'Type': 'Race', 'Introduced': 4},
     'round_slimeclimb_2_event_only_02': {'Name': 'The Slimescraper 2 (Slimescraper Time)', 'Type': 'Race', 'Introduced': 4},
     
+    'round_hoverboardsurvival_event_only': {'Name': 'Hoverboard Heroes 1 and 2 (Hoverboarding Time)', 'Type': 'Survival', 'Introduced': 4},
     
     # Hunt
     'round_tail_tag': {'Name': 'Tail Tag', 
@@ -207,6 +208,12 @@ rounds_info_dict = {
     'round_slimeclimb_2_event_only_final': {'Name': 'The Slimescraper Final (Slimescraper Time)', 
                                             'Type': 'Final', 
                                             'Introduced': 4},
+    'round_floor_fall_mini_low_grav': {'Name': 'Hex-A-Gone (Low Gravity)', 
+                                       'Type': 'Final', 
+                                       'Introduced': 4},
+    'round_hoverboardsurvival_final': {'Name': 'Hoverboard Heroes Final (Hoverboarding Time)', 
+                                       'Type': 'Final', 
+                                       'Introduced': 4},
 }
 
 # '': {'Name': '', 'Type': '', 'Introduced': 4},
@@ -243,6 +250,10 @@ show_type_dict = {
     'event_only_floor_fall_low_grav_0306_to_0606_2021': 'Hex-a-4041 Trials',
     'event_no_teams_1406_to_1606_2021': 'No Teams',
     'event_only_slime_climb_2_1706_to_2006_2021': 'Slimescraper Time',
+    'event_fruit_basket_2106_to_2306_2021': 'Fruit Basket',
+    'event_only_jump_club_2406_to_2706_2021': 'Jump Around',
+    'event_fanfare_2806_to_0107_2021': 'Blow Up',
+    'event_only_hoverboard_0207_to_0507_2021':'Hoverboarding Time',
 }
 
 show_type_dict_v2 = {
@@ -267,6 +278,8 @@ show_type_dict_v2 = {
     'event_only_floor_fall_low_grav': 'Hex-a-4041 Trials',
     'event_no_teams': 'No Teams',
     'event_only_slime_climb_2': 'Slimescraper Time',
+    'event_fruit_basket': 'Fruit Basket',
+    'event_only_hoverboard':'Hoverboarding Time',
 }
 
 # all possible starting races in a normal round
