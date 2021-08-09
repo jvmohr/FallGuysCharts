@@ -49,9 +49,10 @@ def getTimeTaken(start, end, HOURS_DIFFERENTIAL):
 # expand on this later
 def getSeason(start_time, HOURS_DIFFERENTIAL):
     season_starts = {1: datetime.datetime.strptime("08/04/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'), 
-                    2: datetime.datetime.strptime("10/08/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'), 
-                    3: datetime.datetime.strptime("12/15/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'),
-                    4: datetime.datetime.strptime("03/21/2021 12:00:00 PM", '%m/%d/%Y %I:%M:%S %p'),
+                     2: datetime.datetime.strptime("10/08/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'), 
+                     3: datetime.datetime.strptime("12/15/2020 11:00:00 AM", '%m/%d/%Y %I:%M:%S %p'), 
+                     4: datetime.datetime.strptime("03/21/2021 12:00:00 PM", '%m/%d/%Y %I:%M:%S %p'), 
+                     5: datetime.datetime.strptime("07/20/2021 12:00:00 PM", '%m/%d/%Y %I:%M:%S %p'), # about
                     }
     
     curr_day = start_time - datetime.timedelta(hours=HOURS_DIFFERENTIAL) # offset timezone
@@ -409,6 +410,7 @@ def getRoundInfo(df, finals=False):
     return new_df
 
 def getRoundInfoDataFrame(rounds_df):
+    list_of_finals = getFinalRoundKeys()
     finals_df = rounds_df[np.isin(rounds_df['Map'], list_of_finals)].copy() # just finals
     non_finals_df = rounds_df[~np.isin(rounds_df['Map'], list_of_finals)].copy() # remove finals
 
@@ -571,3 +573,7 @@ def getTopTimes(rounds_df, shows_df, map_, n=5):
     temp_df = temp_df[temp_df['Qualified'] == True]
     top_n_df = temp_df.sort_values('Time Spent')[['Show ID', 'Time Spent']][:n]
     return pd.merge(top_n_df, shows_df, on='Show ID', how='left')
+
+# Gets list of all final round maps
+def getFinalRoundKeys():
+    return [key for key in rounds_info_dict if rounds_info_dict[key]['Type'] == 'Final']

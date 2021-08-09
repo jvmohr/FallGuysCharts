@@ -1,5 +1,8 @@
 # FallGuysCharts Full Version History
 
+### 1.1.5 (8/9/2021)
+- General: Added info for new Slime Survivors, new Slimescraper Time, Squads Trios, Lily Leapers Limbo, Anniversary Party, and Beasty Guys playlists and info for new season 5 maps to fallGuysStructures.py, as well as updating some other data and removing list_of_finals; added getFinalRoundKeys() to fallGuysFcns.py and incorporated it in getRoundInfoDataFrame()
+
 ### 1.1.4 (7/5/2021)
 - General: Added map info for Hex-A-Gone (Low Gravity) and show info for Fruit Basket, new Jump Around, new Blow Up, and Hoverboarding Time to fallGuysStructures.py
 - Tracker: Fixed a bug that popped up due to round naming in Hoverboarding Time playlist

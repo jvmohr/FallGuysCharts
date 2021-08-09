@@ -48,15 +48,18 @@ This runs the script for the session before the most recent one.
 ## Version History
 (full changelog in [versions.md](https://github.com/jvmohr/FallGuysCharts/blob/main/versions.md)
 
+### 1.1.5 (8/9/2021)
+- General: Added info for new Slime Survivors, new Slimescraper Time, Squads Trios, Lily Leapers Limbo, Anniversary Party, and Beasty Guys playlists and info for new season 5 maps to fallGuysStructures.py, as well as updating some other data and removing list_of_finals; added getFinalRoundKeys() to fallGuysFcns.py and incorporated it in getRoundInfoDataFrame()
+
 ### 1.1.4 (7/5/2021)
-- General: Added map info for Hex-A-Gone (Low Gravity) and show info for Fruit Basket, new Jump Around, new Blow Up, and Hoverboarding Time to fallGuysStructures.py
+- General: Added info to fallGuysStructures.py
 - Tracker: Fixed a bug that popped up due to round naming in Hoverboarding Time playlist
 
 ### 1.1.3 (6/18/2021)
-- General: Added map info for The Slimescraper and Button Bashers; show info for X-treme Fall Guys, Blow Up, Hex-a-4041 Trials, No Teams, and Slimescraper Time; small formatting changes in fallGuysStructures.py
+- General: Added info and small formatting changes in fallGuysStructures.py
 
 ### 1.1.2 (5/11/2021)
-- General: Added info for Roll Call, Big Yeetus Tour, and Fall Ball Cup playlists 
+- General: Added info to fallGuysStructures.py
 - Tracker: Fixed a problem where the game must switch maps in loading phase (had been partly fixed before)
 - Graphs: Added mapStatsOverTimeLine()
 - Statistics: Added getTopTimes() to get top n times user took on a specific map

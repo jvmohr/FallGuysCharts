@@ -59,6 +59,12 @@ rounds_info_dict = {
     'round_slimeclimb_2': {'Name': 'The Slimescraper', 
                            'Type': 'Race', 
                            'Introduced': 4},
+    'round_drumtop': {'Name': 'Lily Leapers', 
+                      'Type': 'Race', 
+                      'Introduced': 5},
+    'round_gauntlet_07': {'Name': 'Treetop Tumble', 
+                          'Type': 'Race', 
+                          'Introduced': 5},
     
     
     # Survival
@@ -80,6 +86,10 @@ rounds_info_dict = {
     'round_hoverboardsurvival': {'Name': 'Hoverboard Heroes', 
                                  'Type': 'Survival', 
                                  'Introduced': 4},
+    'round_robotrampage_arena_2': {'Name': "Stompin' Ground", 
+                                   'Type': 'Survival', 
+                                   'Introduced': 5},
+    
     # "Special" Shows (all or mostly one map)
     'round_floor_fall_event_only_01': {'Name': 'Hex-A-Gone 1 (Hex-a-gone Trials)', 'Type': 'Survival', 'Introduced': 3},
     'round_floor_fall_event_only_02': {'Name': 'Hex-A-Gone 2 (Hex-a-gone Trials)', 'Type': 'Survival', 'Introduced': 3},
@@ -114,6 +124,8 @@ rounds_info_dict = {
     
     'round_hoverboardsurvival_event_only': {'Name': 'Hoverboard Heroes 1 and 2 (Hoverboarding Time)', 'Type': 'Survival', 'Introduced': 4},
     
+    'round_drumtop_event_only': {'Name': 'Lily Leapers 1 and 2 (Lily Leapers Limbo)', 'Type': 'Race', 'Introduced': 5},
+    
     # Hunt
     'round_tail_tag': {'Name': 'Tail Tag', 
                        'Type': 'Hunt', 
@@ -124,6 +136,12 @@ rounds_info_dict = {
     'round_1v1_button_basher': {'Name': 'Button Bashers', 
                                 'Type': 'Hunt', 
                                 'Introduced': 4},
+    'round_king_of_the_hill': {'Name': 'Bubble Trouble', 
+                               'Type': 'Hunt', 
+                               'Introduced': 5},
+    'round_penguin_solos': {'Name': 'Pegwin Pool Party', 
+                            'Type': 'Hunt', 
+                            'Introduced': 5},
     
     # Logic
     'round_match_fall': {'Name': 'Perfect Match', 
@@ -214,19 +232,17 @@ rounds_info_dict = {
     'round_hoverboardsurvival_final': {'Name': 'Hoverboard Heroes Final (Hoverboarding Time)', 
                                        'Type': 'Final', 
                                        'Introduced': 4},
+    'round_crown_maze': {'Name': 'Lost Temple', 
+                         'Type': 'Final', 
+                         'Introduced': 5},
+    'round_drumtop_event_only_final': {'Name': 'Lily Leapers Final (Lily Leapers Limbo)', 
+                                       'Type': 'Race', 
+                                       'Introduced': 5},
 }
+# '': {'Name': '', 'Type': '', 'Introduced': 5},
 
-# '': {'Name': '', 'Type': '', 'Introduced': 4},
-
-# at some point figure out where/if this is used
-list_of_finals = ['round_fall_mountain', 'round_floor_fall', 'round_royal_rumble', 'round_jump_showdown', 
-                  'round_fall_mountain_hub_complete', 'round_thin_ice', 'round_tunnel_final', 
-                  'round_floor_fall_event_only_final', 'round_jump_showdown_jump_club_event_only_final', 
-                  'round_thin_ice_event_only_final']
 
 # somewhat maintained
-# maybe redo this to get rid of the dates part
-# could test for inclusion elsewhere
 show_type_dict = {
     'main_show': 'Main Show',
     'event_only_survival_3010_to_0511': 'Slime Survivors',
@@ -254,6 +270,13 @@ show_type_dict = {
     'event_only_jump_club_2406_to_2706_2021': 'Jump Around',
     'event_fanfare_2806_to_0107_2021': 'Blow Up',
     'event_only_hoverboard_0207_to_0507_2021':'Hoverboarding Time',
+    'event_only_survival_0607_to_0807_2021': 'Slime Survivors',
+    'event_only_slime_climb_2_1707_to_1907_2021': 'Slimescraper Time',
+    'event_only_season_5_2007_to_2407_2021': 'Welcome to the Jungle',
+    'squads_3player_0208_to_1508_2021': 'Squads Trios',
+    'event_only_drumtop_0108_to_0308_2021': 'Lily Leapers Limbo',
+    'event_anniversary_season_1_0408_to_0808_2021': 'Anniversary Party',
+    'event_animals_0908_to_1208_2021': 'Beasty Guys',
 }
 
 show_type_dict_v2 = {
@@ -280,6 +303,11 @@ show_type_dict_v2 = {
     'event_only_slime_climb_2': 'Slimescraper Time',
     'event_fruit_basket': 'Fruit Basket',
     'event_only_hoverboard':'Hoverboarding Time',
+    'event_only_season_5': 'Welcome to the Jungle',
+    'squads_3player': 'Squads Trios',
+    'event_only_drumtop': 'Lily Leapers Limbo',
+    'event_anniversary_season_1': 'Anniversary Party',
+    'event_animals': 'Beasty Guys',
 }
 
 # all possible starting races in a normal round
@@ -287,9 +315,10 @@ show_type_dict_v2 = {
 starting_races = ['round_biggestfan', 'round_gauntlet_02', 'round_door_dash', 
                   'round_chompchomp', 'round_gauntlet_01', 'round_see_saw', 
                   'round_gauntlet_03', 'round_gauntlet_04', 'round_gauntlet_05', 
-                  'round_gauntlet_06', 'round_tunnel_race']
+                  'round_gauntlet_06', 'round_tunnel_race', 'round_drumtop', 
+                  'round_gauntlet_07']
 
 # special shows (aka shows that are all the "same"/a similar round, like all Thin Ice)
 special_shows = ['event_only_floor_fall', 'event_only_jump_club', 'event_only_thin_ice', 
-                 'event_only_basketfall', 'event_only_slime_climb', 'event_only_roll_out']
-
+                 'event_only_basketfall', 'event_only_slime_climb', 'event_only_roll_out', 
+                 'event_only_floor_fall_low_grav', 'event_only_slime_climb_2', 'event_only_hoverboard']
